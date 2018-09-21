@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ImportResource;
 @SpringBootApplication
 @ComponentScan
 @EnableAspectJAutoProxy
-@ImportResource(locations = "classpath:application-context.xml")
+//@ImportResource(locations = "classpath:application-context.xml")
 public class Application {
 
     public static void main(String[] args) {

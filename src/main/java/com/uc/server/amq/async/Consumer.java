@@ -2,9 +2,8 @@ package com.uc.server.amq.async;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-public class Producer {
-
+public class Consumer {
     public static void main(String[] args) {
-        new AnnotationConfigApplicationContext(ProducerConfiguration.class);
+        new AnnotationConfigApplicationContext(ConsumerConfiguration.class);
     }
 }
