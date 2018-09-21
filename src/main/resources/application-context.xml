@@ -20,7 +20,7 @@
 		<property name="locations">
 			<list>
 				<!-- 这里支持多种寻址方式：classpath和file -->
-				<value>classpath:*.properties</value>
+				<value>classpath:config.properties</value>
 			</list>
 		</property>
 	</bean>
