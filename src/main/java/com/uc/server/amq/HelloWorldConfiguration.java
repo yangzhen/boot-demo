@@ -1,4 +1,4 @@
-package org.springframework.amqp.helloworld;
+package com.uc.server.amq;
 
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Queue;
