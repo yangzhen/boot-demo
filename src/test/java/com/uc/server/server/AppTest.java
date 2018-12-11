@@ -32,4 +32,5 @@ public class AppTest {
 
         Assert.assertNotNull(loanEntry);
     }
+
 }

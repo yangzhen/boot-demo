@@ -2,6 +2,7 @@ package com.uc.server.amq.async;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -12,8 +13,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 
-@Configuration
+//@Configuration
+@Slf4j
 public class ProducerConfiguration {
+
 
     protected final String helloWorldQueueName = "hello.world.queue";
 
@@ -53,7 +56,7 @@ public class ProducerConfiguration {
         @Scheduled(fixedRate = 3000)
         public void sendMessage() {
             String text = "Hello World " + counter.incrementAndGet();
-            System.out.println(text);
+            log.info(text);
             rabbitTemplate.convertAndSend(text);
         }
     }
