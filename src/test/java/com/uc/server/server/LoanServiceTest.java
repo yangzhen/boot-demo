@@ -1,28 +1,25 @@
 package com.uc.server.server;
 
 import com.uc.server.Application;
-import com.uc.server.amq.boot.Sender;
+import com.uc.server.service.LoanService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Date;
-
 @SpringBootTest(classes = Application.class)
 @RunWith(SpringRunner.class)
-public class RabbitTests {
-    
+@Slf4j
+public class LoanServiceTest {
+
     @Autowired
-    private Sender sender;
-    
+    private LoanService loanService;
+
     @Test
-    public void sendTest() throws Exception {
-        while(true){
-            String msg = new Date().toString();
-            sender.send(msg);
-            Thread.sleep(1000);
-        }
+    public void test() {
+        log.info("------loanService:" + loanService);
+        loanService.repay(1,100);
     }
 }

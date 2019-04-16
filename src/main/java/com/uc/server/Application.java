@@ -10,8 +10,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
-@ComponentScan
-@EnableAspectJAutoProxy
 public class Application {
 
     public static void main(String[] args) {
