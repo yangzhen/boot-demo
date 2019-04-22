@@ -44,10 +44,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springside</groupId>
@@ -303,17 +299,8 @@
             </activation>
             <properties>
                 <spring.datasource.url>127.0.0.1:3306/test</spring.datasource.url>
-                <spring.datasource.username>root</spring.datasource.username>
-                <spring.datasource.password>123456</spring.datasource.password>
-
-            </properties>
-        </profile>
-        <profile>
-            <id>sa</id>
-            <properties>
-                <spring.datasource.url>#{spring.datasource.url}</spring.datasource.url>
-                <spring.datasource.username>#{spring.datasource.username}</spring.datasource.username>
-                <spring.datasource.password>#{spring.datasource.password}</spring.datasource.password>
+                <spring.datasource.username>admin</spring.datasource.username>
+                <spring.datasource.password>admin123</spring.datasource.password>
 
             </properties>
         </profile>
