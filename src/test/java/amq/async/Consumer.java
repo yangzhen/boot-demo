@@ -1,4 +1,4 @@
-package com.uc.server.amq.async;
+package amq.async;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

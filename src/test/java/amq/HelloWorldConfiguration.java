@@ -1,7 +1,11 @@
-package com.uc.server.amq;
+package amq;
 
 import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -12,7 +16,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class HelloWorldConfiguration {
 
-	protected final String helloWorldQueueName = "hello.world.queue";
+	public final static String helloWorldQueueName = "hello.world.queue";
+
+	public final static String helloWorldFanout = "hello.world.fanout.queue";
 
 	@Bean
 	public ConnectionFactory connectionFactory() {
@@ -31,23 +37,28 @@ public class HelloWorldConfiguration {
 	public RabbitTemplate rabbitTemplate() {
 		RabbitTemplate template = new RabbitTemplate(connectionFactory());
 		//The routing key is set to the name of the queue by the broker for the default exchange.
-		template.setRoutingKey(this.helloWorldQueueName);
+		//template.setRoutingKey(this.helloWorldQueueName);
 		//Where we will synchronously receive messages from
-		template.setQueue(this.helloWorldQueueName);
+		//template.setQueue(this.helloWorldQueueName);
+		//template.setExchange(helloWorldQueueName);
 		return template;
 	}
 
-	@Bean
 	// Every queue is bound to the default direct exchange
+	@Bean
 	public Queue helloWorldQueue() {
 		return new Queue(this.helloWorldQueueName);
 	}
 
-	/*
-	@Bean 
-	public Binding binding() {
-		return declare(new Binding(helloWorldQueue(), defaultDirectExchange()));
-	}*/
+	@Bean
+	FanoutExchange exchange() {
+		return new FanoutExchange(helloWorldFanout);
+	}
+
+	@Bean
+	Binding binding(Queue queue, FanoutExchange exchange) {
+		return BindingBuilder.bind(queue).to(exchange);
+	}
 	
 	/*	
 	@Bean

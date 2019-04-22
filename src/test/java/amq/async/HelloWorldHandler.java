@@ -1,6 +1,4 @@
-package com.uc.server.amq.async;
-
-import java.util.concurrent.atomic.AtomicLong;
+package amq.async;
 
 public class HelloWorldHandler {
 

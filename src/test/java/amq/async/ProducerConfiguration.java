@@ -1,4 +1,4 @@
-package com.uc.server.amq.async;
+package amq.async;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

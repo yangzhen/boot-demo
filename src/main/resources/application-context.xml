@@ -2,29 +2,89 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd"
 	default-lazy-init="true">
 
 	<description>Spring公共配置</description>
 
-	<!-- 将多个配置文件读取到容器中，交给Spring管理 -->
-	<bean id="propertyConfigurer"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="locations">
-			<list>
-				<!-- 这里支持多种寻址方式：classpath和file -->
-				<value>classpath:config.properties</value>
-			</list>
+	<!--配置：连接 CachingConnectionFactory -->
+	<rabbit:connection-factory
+		id="rabbitConnectionFactory" factory-timeout="30000" connection-timeout="30000"
+		cache-mode="${spring.rabbitmq.cache.connection.mode}"
+		virtual-host="${spring.rabbitmq.virtual-host}"
+		channel-cache-size="${spring.rabbitmq.cache.channel.size}"
+		addresses="${spring.rabbitmq.addresses}"
+		requested-heartbeat="${spring.rabbitmq.requested-heartbeat}"
+		username="${spring.rabbitmq.username}"
+		password="${spring.rabbitmq.password}" />
+	<!--配置：RabbitTemplate -->
+	<rabbit:template id="rabbitTemplate"
+		connection-factory="rabbitConnectionFactory" channel-transacted="true" retry-template="retryTemplate"/>
+	<!-- 配置：发送重试 -->
+	<bean id="retryTemplate" class="org.springframework.retry.support.RetryTemplate">
+		<property name="backOffPolicy">
+			<bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+				<property name="initialInterval" value="${spring.rabbitmq.template.retry.initial-interval}" />
+				<property name="maxInterval" value="${spring.rabbitmq.template.retry.max-interval}" />
+			</bean>
+		</property>
+	</bean>
+	<!--配置：RabbitAdmin -->
+	<rabbit:admin connection-factory="rabbitConnectionFactory" />
+	<!-- 配置：重试,修改重试次数 -->
+	<bean id="retryAdvice" class="org.springframework.amqp.rabbit.config.StatelessRetryOperationsInterceptorFactoryBean">
+		<property name="messageRecoverer">
+			<bean class="org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer"/>
+		</property>
+		<property name="retryOperations">
+			<bean class="org.springframework.retry.support.RetryTemplate">
+				<property name="retryPolicy">
+					<bean class="org.springframework.retry.policy.SimpleRetryPolicy">
+						<!-- 重试次数 -->
+						<property name="maxAttempts" value="${spring.rabbitmq.listener.simple.retry.max-attempts}" />
+					</bean>
+				</property>
+				<property name="backOffPolicy">
+					<bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+						<!-- 重试间隔 -->
+						<property name="initialInterval" value="${spring.rabbitmq.listener.simple.retry.initial-interval}" />
+						<property name="maxInterval" value="${spring.rabbitmq.listener.simple.retry.max-interval}" />
+					</bean>
+				</property>
+			</bean>
 		</property>
 	</bean>
 
-	<aop:aspectj-autoproxy />
+
+	<!--配置：direct类型exchange -->
+	<rabbit:direct-exchange name="exchange.kepler.direct">
+		<rabbit:bindings>
+			<rabbit:binding queue="queue.kepler.autopay" key="autopay" />
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+
+	<!--配置：队列 -->
+	<rabbit:queue id="kepler_autopay" name="queue.kepler.autopay" >
+		<rabbit:queue-arguments>
+			<entry key="x-ha-policy" value="all" />
+			<entry key="ha-sync-mode" value="automatic"/>
+		</rabbit:queue-arguments>
+	</rabbit:queue>
+	<!--配置： 监听 -->
+	<rabbit:listener-container
+		transaction-size="1" prefetch="1" channel-transacted="true"
+		advice-chain="retryAdvice" requeue-rejected="false"
+		idle-event-interval="60000" concurrency="4" max-concurrency="10" >
+		<rabbit:listener queue-names="queue.kepler.autopay" ref="rabbitAutoPayListener" method="onMessage" />
+	</rabbit:listener-container>
 
 </beans>
