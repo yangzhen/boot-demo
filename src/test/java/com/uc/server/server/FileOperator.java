@@ -14,10 +14,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * @author yangxinyan
- * @date 2019/4/23 17:28
- */
 public class FileOperator {
 
   public static void main(String[] args) throws IOException {
