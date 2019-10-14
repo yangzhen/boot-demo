@@ -44,18 +44,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springside</groupId>
-            <artifactId>springside-core</artifactId>
-            <version>4.0.0.GA</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springside</groupId>
-            <artifactId>springside-test</artifactId>
-            <version>4.0.0.GA</version>
-        </dependency>
-
         <!-- guava -->
         <dependency>
             <groupId>com.google.guava</groupId>

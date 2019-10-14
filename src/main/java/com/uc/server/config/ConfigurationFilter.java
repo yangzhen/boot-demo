@@ -43,13 +43,13 @@ public class ConfigurationFilter {
         return new HttpMessageConverters(converter);
     }
 	
-	@Bean  
-    public FilterRegistrationBean logFilter() {  
-        FilterRegistrationBean logFilter = new FilterRegistrationBean();  
-        logFilter.addUrlPatterns("/*");  
-        logFilter.setFilter(new LogFilter());  
-        return logFilter;  
-    }  
+//	@Bean
+//    public FilterRegistrationBean logFilter() {
+//        FilterRegistrationBean logFilter = new FilterRegistrationBean();
+//        logFilter.addUrlPatterns("/*");
+//        logFilter.setFilter(new com.yxy.common.config.TraceFilter());
+//        return logFilter;
+//    }
 	
 	
 	public class LogFilter implements Filter {
@@ -75,12 +75,12 @@ public class ConfigurationFilter {
                 MDCHolder.clear();
             }
             logger.info("--------------------> out " + ((HttpServletRequest) srequest).getRequestURI());
-            
+
         }
 
         @Override
         public void init(FilterConfig arg0) throws ServletException {
-        	
+
         }
     }
 }
