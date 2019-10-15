@@ -11,6 +11,8 @@ import com.uc.server.domain.entry.Region;
 import com.uc.server.domain.manager.LoanManager;
 import java.util.Collection;
 import java.util.List;
+import org.apache.ibatis.logging.Log;
+import org.apache.ibatis.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +43,8 @@ public class AppTest {
 
         logger.info("loanInfo:" + loanEntry);
 
+        Log log = LogFactory.getLog("xxxx");
+        System.out.println("=============>" + log);
         Assert.assertNotNull(loanEntry);
     }
 

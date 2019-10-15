@@ -49,6 +49,21 @@
 			</fileNamePattern>
 		</rollingPolicy>
 	</appender>
+	
+	<appender name="THEMIS-STAT"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${log.path}/themis-stat.log</File>
+		<encoder>
+			<pattern>%msg%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log.path}/themis-stat.log.%d{yyyy-MM-dd}
+			</fileNamePattern>
+		</rollingPolicy>
+	</appender>
+	<logger name="themis-stat" additivity="false" level="INFO">
+		<appender-ref ref="THEMIS-STAT" />
+	</logger>
 
 
   	<logger name="elk_error" additivity="false" level="ERROR">
