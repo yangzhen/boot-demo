@@ -3,7 +3,6 @@ package com.uc.server.config;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.hwl.themis.log.config.TraceFilter;
 import com.uc.server.util.MDCHolder;
 import com.uc.server.util.RequestUtil;
 import java.util.ArrayList;
@@ -44,15 +43,7 @@ public class ConfigurationFilter {
         return new HttpMessageConverters(converter);
     }
 	
-	@Bean  
-    public FilterRegistrationBean logFilter() {  
-        FilterRegistrationBean logFilter = new FilterRegistrationBean();  
-        logFilter.addUrlPatterns("/*");  
-        logFilter.setFilter(new TraceFilter());  
-        return logFilter;  
-    }  
-	
-	
+
 	public class LogFilter implements Filter {
         @Override
         public void destroy() {
@@ -76,12 +67,12 @@ public class ConfigurationFilter {
                 MDCHolder.clear();
             }
             logger.info("--------------------> out " + ((HttpServletRequest) srequest).getRequestURI());
-            
+
         }
 
         @Override
         public void init(FilterConfig arg0) throws ServletException {
-        	
+
         }
     }
 }
