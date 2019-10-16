@@ -43,44 +43,44 @@ public class ConfigurationFilter {
         return new HttpMessageConverters(converter);
     }
 	
-//	@Bean
-//    public FilterRegistrationBean logFilter() {
-//        FilterRegistrationBean logFilter = new FilterRegistrationBean();
-//        logFilter.addUrlPatterns("/*");
-//        logFilter.setFilter(new com.yxy.common.config.TraceFilter());
-//        return logFilter;
-//    }
-	
-	
-	public class LogFilter implements Filter {
-        @Override
-        public void destroy() {
-        	MDCHolder.clear();
-        }
-
-        @Override
-        public void doFilter(ServletRequest srequest, ServletResponse sresponse, FilterChain
-                filterChain)
-                throws IOException, ServletException {
-        	HttpServletRequest httpServletRequest = (HttpServletRequest)srequest;
-
-            MDCHolder.putTraceId(UUID.randomUUID().toString());
-            MDCHolder.putUserIp(RequestUtil.getIp(httpServletRequest));
-
-            logger.info("--------------------> in " + ((HttpServletRequest) srequest).getRequestURI());
-
-            try {
-                filterChain.doFilter(srequest, sresponse);
-            } finally {
-                MDCHolder.clear();
-            }
-            logger.info("--------------------> out " + ((HttpServletRequest) srequest).getRequestURI());
-
-        }
-
-        @Override
-        public void init(FilterConfig arg0) throws ServletException {
-
-        }
+	@Bean
+    public FilterRegistrationBean logFilter() {
+        FilterRegistrationBean logFilter = new FilterRegistrationBean();
+        logFilter.addUrlPatterns("/*");
+        logFilter.setFilter(new com.yxy.common.config.TraceFilter());
+        return logFilter;
     }
+	
+	
+//	public class LogFilter implements Filter {
+//        @Override
+//        public void destroy() {
+//        	MDCHolder.clear();
+//        }
+//
+//        @Override
+//        public void doFilter(ServletRequest srequest, ServletResponse sresponse, FilterChain
+//                filterChain)
+//                throws IOException, ServletException {
+//        	HttpServletRequest httpServletRequest = (HttpServletRequest)srequest;
+//
+//            MDCHolder.putTraceId(UUID.randomUUID().toString());
+//            MDCHolder.putUserIp(RequestUtil.getIp(httpServletRequest));
+//
+//            logger.info("--------------------> in " + ((HttpServletRequest) srequest).getRequestURI());
+//
+//            try {
+//                filterChain.doFilter(srequest, sresponse);
+//            } finally {
+//                MDCHolder.clear();
+//            }
+//            logger.info("--------------------> out " + ((HttpServletRequest) srequest).getRequestURI());
+//
+//        }
+//
+//        @Override
+//        public void init(FilterConfig arg0) throws ServletException {
+//
+//        }
+//    }
 }

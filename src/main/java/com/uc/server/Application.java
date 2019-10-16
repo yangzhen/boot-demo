@@ -7,6 +7,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 
 @MapperScan({"com.uc.server.domain.dao"})
 @SpringBootApplication
+@ImportResource("classpath:themis-log-context.xml")
 public class Application {
 
     public static void main(String[] args) {
