@@ -30,7 +30,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
  * @date 2019/9/25 17:27
  */
 @Aspect
-@Component
+@Component("testaop")
 @Slf4j
 public class WebControllerAop {
 
